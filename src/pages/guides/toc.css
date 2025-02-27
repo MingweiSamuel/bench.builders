@@ -1,0 +1,30 @@
+nav.toc {
+    display: none;
+}
+
+.has-toc nav.toc {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+nav.toc li.toc-item > a {
+    opacity: 0.5;
+    transition: opacity 50ms ease-in-out;
+}
+nav.toc li.toc-item.active > a {
+    opacity: 1;
+}
+
+nav.toc ol {
+    padding-left: 0;
+    margin-left: 20px;
+}
+nav.toc ol:has(> :only-child) {
+    /* Hide single-child subsections. */
+    display: none;
+}
+nav.toc ol li {
+    list-style-type: none;
+}
