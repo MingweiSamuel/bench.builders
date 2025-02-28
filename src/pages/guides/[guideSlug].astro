@@ -1,5 +1,4 @@
 ---
-import "./toc.css";
 import { getCollection, render } from "astro:content";
 import Page from "../../layouts/Page.astro";
 
@@ -23,22 +22,61 @@ const { Content } = await render(guide);
     <Content />
   </div>
 </Page>
+<style lang="scss">
+  nav.toc {
+    display: none;
+  }
+
+  .has-toc nav.toc {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+
+  nav.toc {
+    li.toc-item > a {
+      opacity: 0.5;
+      transition: opacity 50ms ease-in-out;
+    }
+    li.toc-item.active > a {
+      opacity: 1;
+    }
+
+    ol {
+      padding-left: 0;
+      margin-left: 20px;
+
+      &:has(> :only-child) {
+        /* Hide single-child subsections. */
+        display: none;
+      }
+
+      li {
+        list-style-type: none;
+      }
+    }
+  }
+</style>
 
 <script>
   // ToC script.
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      // Get id of first child node.
-      const id = entry.target.firstElementChild?.id;
-      if (null == id) continue;
-      const el = document.querySelector(`nav.toc li a[href="#${id}"]`);
-      if (null == el) continue;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        // Get id of first child node.
+        const id = entry.target.firstElementChild?.id;
+        if (null == id) continue;
+        const el = document.querySelector(`nav.toc li a[href="#${id}"]`);
+        if (null == el) continue;
 
-      console.log(id, entry.boundingClientRect);
+        console.log(id, entry.boundingClientRect);
 
-      el.parentElement!.classList.toggle("active", entry.isIntersecting);
-    }
-  }, { rootMargin: "-20% 0px -20% 0px" });
+        el.parentElement!.classList.toggle("active", entry.isIntersecting);
+      }
+    },
+    { rootMargin: "-20% 0px -20% 0px" },
+  );
 
   // Track all sections.
   document.querySelectorAll("section").forEach((section) => {
